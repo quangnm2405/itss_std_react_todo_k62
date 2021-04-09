@@ -42,13 +42,32 @@ function Todo() {
     putItems([...items, newItem])
   }
   
+  const [tab,setTab] = useState("すべて");
+  const itemTab = () => {
+      const tabItem = items.filter((item) => {
+          if (tab === "すべて")
+              return item;
+          if (tab === "未完了" && !item.done) {
+              return item;
+          }
+          if (tab === "完了済み" && item.done) {
+              return item;
+          }
+      });
+      return tabItem;
+  };
+  const handleChangeTab = (target) =>{
+      setTab(target);
+  };
+  
   return (
     <div className="panel">
       <div className="panel-heading">
         ITSS ToDoアプリ
       </div>
       <Input event = {addTask}/>
-      {items.map(item => (
+      <Filter onClick={handleChangeTab}/>
+      {itemTab().map(item => (
         <TodoItem
           key = {item.key}
           item = {item}
@@ -56,7 +75,7 @@ function Todo() {
         />
       ))}
       <div className="panel-block">
-        {items.length} items
+        {itemTab().length} items
       </div>
     </div>
   );
