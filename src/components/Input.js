@@ -14,7 +14,7 @@ function Input( {event}  ) {
 
   return (
     <div className="panel-block">
-      <input class="input" type="text" placeholder="input vao"
+      <input class="input" type="text" placeholder="input"
         onKeyPress={handleKeyPress} value={input} onChange={i => setInput(i.target.value)}
       />
     </div>
