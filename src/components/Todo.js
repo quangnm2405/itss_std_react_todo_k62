@@ -1,47 +1,33 @@
 import React, { useState } from 'react';
-
 /* 
   【Todoのデータ構成】
 　・key：Todoを特定するID（String）
 　・text：Todoの内容（String）
 　・done：完了状態（Boolean true:完了済み,, false:未完了）
 */
-
 /* コンポーネント */
 import TodoItem from './TodoItem';
 import Input from './Input';
 import Filter from './Filter';
-
 /* カスタムフック */
-import useStorage from '../hooks/storage';
-
+import useStorage from './storage';
 /* ライブラリ */
 import {getKey} from "../lib/util";
 
 function Todo() {
-  const [items, putItems] = React.useState([
-      /* テストコード 開始 */
-    { key: getKey(), text: '日本語の宿題', done: false },
-    { key: getKey(), text: 'reactを勉強する', done: false },
-    { key: getKey(), text: '明日の準備をする', done: false },
-    /* テストコード 終了 */
-  ]);
-  
-    const handleCheck = checked => {
-      const newItems = items.map(item => {
-        if (item.key === checked.key) {
-          item.done = !item.done;
-        }
+  const [items, putItems,cleanItems] = useStorage();
+  const handleCheckTodoItem = (i) => {
+    const newItems = items.map((item) => {
+        if(item.key === i.key)
+            item.done = !item.done;
         return item;
-      });
+    });
       putItems(newItems);
-    };
-  
-  const addTask = (input) => {
-    let newItem =  { key: getKey(), text: input, done: false };
-    putItems([...items, newItem])
-  }
-  
+  };
+  const handleAdd = (text) => {
+      const newItem = {key: getKey(), text: text, done: false};
+      putItems([...items,newItem]);
+  };
   const [tab,setTab] = useState("すべて");
   const itemTab = () => {
       const tabItem = items.filter((item) => {
@@ -59,26 +45,26 @@ function Todo() {
   const handleChangeTab = (target) =>{
       setTab(target);
   };
-  
+  const handleCleanItem = () =>{
+      cleanItems();
+  };
   return (
     <div className="panel">
       <div className="panel-heading">
         ITSS ToDoアプリ
       </div>
-      <Input event = {addTask}/>
-      <Filter onClick={handleChangeTab}/>
+        <Input onAdd={handleAdd}/>
+        <Filter onClick={handleChangeTab}/>
       {itemTab().map(item => (
-        <TodoItem
-          key = {item.key}
-          item = {item}
-          onCheck={handleCheck}
-        />
+        <TodoItem item={item} key={item.key} onCheck={handleCheckTodoItem}/>
       ))}
       <div className="panel-block">
         {itemTab().length} items
       </div>
+        <div className="panel-block">
+            <button className="button is-light is-fullwidth" onClick={handleCleanItem}>全てのToDoを削除</button>
+        </div>
     </div>
   );
 }
-
 export default Todo;
