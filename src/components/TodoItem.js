@@ -1,3 +1,4 @@
+import React from 'react';
 /* 
   【TodoItemコンポーネント】
 　・Todoアイテムを表示する
@@ -10,6 +11,7 @@ function TodoItem({ item, onCheck }) {
     }
   
   return (
+
     <label className="panel-block">
       <input type="checkbox" checked={item.done} onChange={eventChange}/>
       <span className={item.done ? 'has-text-grey-light' : ''}>

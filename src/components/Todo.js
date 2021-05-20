@@ -10,24 +10,18 @@ import TodoItem from './TodoItem';
 import Input from './Input';
 import Filter from './Filter';
 /* カスタムフック */
-import useStorage from './storage';
+import useFbStorage from '../hooks/fbStorage';
 /* ライブラリ */
 import {getKey} from "../lib/util";
 
 function Todo() {
-  const [items, putItems,cleanItems] = useStorage();
+  const [items, addItem, updateItem, clearItems] = useFbStorage();
   const handleCheckTodoItem = (i) => {
-    const newItems = items.map((item) => {
-        if(item.key === i.key)
-            item.done = !item.done;
-        return item;
-    });
-      putItems(newItems);
+    updateItem(i);
   };
   const handleAdd = (text) => {
-      const newItem = {key: getKey(), text: text, done: false};
-      putItems([...items,newItem]);
-  };
+      addItem({text:text,done:false})
+      }
   const [tab,setTab] = useState("すべて");
   const itemTab = () => {
       const tabItem = items.filter((item) => {
@@ -46,7 +40,7 @@ function Todo() {
       setTab(target);
   };
   const handleCleanItem = () =>{
-      cleanItems();
+    clearItems();
   };
   return (
     <div className="panel">
